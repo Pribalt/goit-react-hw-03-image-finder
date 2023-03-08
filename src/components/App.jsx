@@ -8,15 +8,20 @@ import { ImageGallery } from 'components/ImageGallery/ImageGallery';
 export class App extends Component {
   state = {
     textSearch: '',
+    page: 1,
   };
 
   handleSubmit = textSearch => {
-    this.setState({ textSearch });
+    this.setState({ textSearch, page: 1 });
+  };
+
+  handleLoad = () => {
+    this.setState(({ page }) => ({ page: page + 1 }));
   };
 
   render() {
-    const { textSearch } = this.state;
-    const { handleSubmit } = this;
+    const { textSearch, page } = this.state;
+    const { handleSubmit, handleLoad } = this;
 
     return (
       <AppStyled>
@@ -28,7 +33,11 @@ export class App extends Component {
           }}
         />
         <Searchbar onSearch={handleSubmit} />
-        <ImageGallery textSearch={textSearch} />
+        <ImageGallery
+          textSearch={textSearch}
+          handleLoad={handleLoad}
+          page={page}
+        />
       </AppStyled>
     );
   }

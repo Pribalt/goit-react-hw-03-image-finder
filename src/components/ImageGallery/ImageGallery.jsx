@@ -12,25 +12,24 @@ export class ImageGallery extends Component {
     images: [],
     loading: false,
     more: false,
-    page: 1,
     perPage: 12,
   };
 
   componentDidUpdate(prevProps, prevState) {
-    const { textSearch } = this.props;
-    const { page, perPage } = this.state;
+    const { textSearch, page } = this.props;
+    const { perPage } = this.state;
 
-    if (prevProps.textSearch !== textSearch || prevState.page !== page) {
+    if (prevProps.textSearch !== textSearch || prevProps.page !== page) {
       this.setState({ loading: true });
 
       getImages(textSearch.trim(), page, perPage)
         .then(images => {
           if (prevProps.textSearch !== textSearch) {
             toast.success(`We found ${images.totalHits} images`);
-            this.setState({ images: [...images.hits], page: 1 });
+            this.setState({ images: [...images.hits] });
           } else {
             this.setState({
-              images: [...this.state.images, ...images.hits],
+              images: [...prevState.images, ...images.hits],
             });
           }
 
@@ -50,13 +49,9 @@ export class ImageGallery extends Component {
     }
   }
 
-  handleLoad = () => {
-    this.setState(({ page }) => ({ page: page + 1 }));
-  };
-
   render() {
     const { loading, more, images } = this.state;
-    const { handleLoad } = this;
+    const { handleLoad } = this.props;
 
     return (
       <>
